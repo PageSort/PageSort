@@ -7,6 +7,8 @@
     <Company>Basham Technologies</Company>
     <Description>This package will enable you to easily page and your collection</Description>
     <PackageTags>Paging, sorting, paging helper</PackageTags>
+    <RepositoryUrl>https://github.com/stanbarn/PageSort.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/stanbarn/PageSort.git</PackageProjectUrl>
   </PropertyGroup>
 
 </Project>

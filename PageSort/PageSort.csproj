@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Stanley Barnabas Nagwere</Authors>
+    <Company>Basham Technologies</Company>
+    <Description>This package will enable you to easily page and your collection</Description>
+    <PackageTags>Paging, sorting, paging helper</PackageTags>
+  </PropertyGroup>
+
+</Project>

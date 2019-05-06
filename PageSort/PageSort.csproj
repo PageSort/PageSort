@@ -9,6 +9,7 @@
     <PackageTags>Paging, sorting, paging helper</PackageTags>
     <RepositoryUrl>https://github.com/stanbarn/PageSort.git</RepositoryUrl>
     <PackageProjectUrl>https://github.com/stanbarn/PageSort.git</PackageProjectUrl>
+    <PackageLicenseExpression>https://github.com/stanbarn/PageSort/blob/master/README.md</PackageLicenseExpression>
   </PropertyGroup>
 
 </Project>

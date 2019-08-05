@@ -8,7 +8,7 @@ namespace PageSort
 {
     public static class Page<T>
     {
-        public static PagedResult<T> GeneratePaging(IQueryable<T> collection, PageQuery pageQuery)
+        public static async PagedResult<T> GeneratePaging(IQueryable<T> collection, PageQuery pageQuery)
         {
 
             int count = collection.Count();
@@ -17,15 +17,18 @@ namespace PageSort
             int TotalCount = count;
             int TotalPages = (int)Math.Ceiling(count / (double)PageSize);
 
-            if (pageQuery.SortDirection == ListSortDirection.Descending)
+            if (!string.IsNullOrEmpty(pageQuery.SortProperty))
             {
-                collection = collection.OrderByDescendingProperty(pageQuery.SortProperty);
+                if (pageQuery.SortDirection == ListSortDirection.Descending)
+                {
+                    collection = collection.OrderByDescendingProperty(pageQuery.SortProperty);
+                }
+                else
+                {
+                    collection = collection.OrderByProperty(pageQuery.SortProperty);
+                }
             }
-            else
-            {
-                collection = collection.OrderByProperty(pageQuery.SortProperty);
-            }
-
+            
             var PreviousPage = CurrentPage > 1 ? true : false;
             var NextPage = CurrentPage < TotalPages ? true : false;
 

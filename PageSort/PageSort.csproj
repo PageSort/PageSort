@@ -10,7 +10,7 @@
     <RepositoryUrl>https://github.com/stanbarn/PageSort.git</RepositoryUrl>
     <PackageProjectUrl>https://github.com/stanbarn/PageSort.git</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
 </Project>

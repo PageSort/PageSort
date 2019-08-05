@@ -17,11 +17,7 @@ namespace PageSort
             int TotalCount = count;
             int TotalPages = (int)Math.Ceiling(count / (double)PageSize);
 
-            if (string.IsNullOrEmpty(pageQuery.SortProperty))
-            {
-                collection = collection.OrderByProperty("CreatedOn");
-            }
-            else if (pageQuery.SortDirection == ListSortDirection.Descending)
+            if (pageQuery.SortDirection == ListSortDirection.Descending)
             {
                 collection = collection.OrderByDescendingProperty(pageQuery.SortProperty);
             }

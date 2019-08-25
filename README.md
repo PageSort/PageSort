@@ -1,6 +1,6 @@
 # PageSort
 
-# What is PageSort
+### What is PageSort
 PageSort is a simple .Net Standard library that is built to ease paging, sort and filtering of Iquerable collections.
 This is the main repository for PageSort and its extensions.
 
@@ -13,16 +13,16 @@ You need to reference the PageSort namespace in your project.
 Using PageSort;
 ```
 
-### Paging Example
+#### Paging Example
 
-#### Using the IQuarable Extension
+##### Using the IQuarable Extension
 
 collection - collection.Page(1, 20);
 
 Thhe Page Iquarable extension takes the pageNumber and the pageSize.
 It returns page collection of the specified source query.
 
-#### Using the GeneratePaging Method.
+##### Using the GeneratePaging Method.
 
 ```csharp
 var pageQuery = new PageQuery{
@@ -37,9 +37,9 @@ var pagedCollection = GeneratePaging(collection, pageQuery);
 The GeneratePaging() method takes an Iquarable collection and a PageQuery object.
 This method returns a PageResult object. 
 
-### Sorting Example
+#### Sorting Example
 
-#### Using the IQuarable Extension.
+##### Using the IQuarable Extension.
 
 ```csharp
 var sortedCollection = collection.OrderByProperty(sortProperty);

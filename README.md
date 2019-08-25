@@ -80,13 +80,13 @@ Below is an example of a PageResult
 }
 ```
 
-**CurrentPage** is an integer that represents the current page of the collection that is being returned
-**PageSize** is the size of the collection that is to be returned per page.
-**TotalCount** is the total number of Items in the collection for which paging is done.
-**TotalPages** is the total number of pages that can be generated from the collection. This value is dependant on the PageSize value that is passed.
-**Collection** is the list of items in the current page.
-**PreviousPage** is a boolean that tells whether there are previous pages or not. This is set to false if PageNumber is 1 or the collection can only have one page.
-**NextPage** is a boolean that tells whether there are more pages or not. It is set to false if there is only one page, or we are on the last page of the collection
+- **CurrentPage** is an integer that represents the current page of the collection that is being returned
+- **PageSize** is the size of the collection that is to be returned per page.
+- **TotalCount** is the total number of Items in the collection for which paging is done.
+- **TotalPages** is the total number of pages that can be generated from the collection. This value is dependant on the PageSize value that is passed.
+- **Collection** is the list of items in the current page.
+- **PreviousPage** is a boolean that tells whether there are previous pages or not. This is set to false if PageNumber is 1 or the collection can only have one page.
+- **NextPage** is a boolean that tells whether there are more pages or not. It is set to false if there is only one page, or we are on the last page of the collection
 
 ### Installing
 

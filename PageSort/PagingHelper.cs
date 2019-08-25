@@ -8,7 +8,7 @@ namespace PageSort
 {
     public static class Page<T>
     {
-        public static async PagedResult<T> GeneratePaging(IQueryable<T> collection, PageQuery pageQuery)
+        public static PagedResult<T> GeneratePaging(IQueryable<T> collection, PageQuery pageQuery)
         {
 
             int count = collection.Count();

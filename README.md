@@ -5,7 +5,7 @@ PageSort is a simple .Net Standard library that is built to ease paging, sort an
 This is the main repository for PageSort and its extensions.
 
 
-## Getting Started
+### Getting Started
 
 You need to reference the PageSort namespace in your project.
 
@@ -93,19 +93,19 @@ Below is an example of a PageResult
 First, [install NuGet](http://docs.nuget.org/docs/start-here/installing-nuget). Then, install [PageSort](https://www.nuget.org/packages/PageSort/) from the package manager console:
 
 ```
-PM> Install-Package PageSort -Version 1.0.2
+PM> Install-Package PageSort
 ```
 
 You can also install the PageSort Package using the .NET CLI
 
 ```
-dotnet add package PageSort --version 1.0.2
+dotnet add package PageSort
 ```
 
 You can also add the package reference to the project file of your project.
 
 ```
-<PackageReference Include="PageSort" Version="1.0.2" />
+<PackageReference Include="PageSort Version="1.0.2" />
 ```
 
 ### Do you have an issue?

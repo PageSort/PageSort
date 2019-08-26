@@ -1,7 +1,6 @@
 # PageSort
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/aeeb7078586c1058301a/maintainability)](https://codeclimate.com/github/stanbarn/PageSort/maintainability) [![Build status](https://ci.appveyor.com/api/projects/status/58gyvtqufqq6l8j5/branch/master?svg=true)](https://ci.appveyor.com/project/stanbarn/pagesort/branch/master)
-
+[![Maintainability](https://api.codeclimate.com/v1/badges/aeeb7078586c1058301a/maintainability)](https://codeclimate.com/github/stanbarn/PageSort/maintainability) [![Build status](https://ci.appveyor.com/api/projects/status/58gyvtqufqq6l8j5/branch/master?svg=true)](https://ci.appveyor.com/project/stanbarn/pagesort/branch/master) ![Nuget](https://img.shields.io/nuget/v/PageSort?style=for-the-badge  ![GitHub](https://img.shields.io/github/license/stanbarn/PageSort?style=for-the-badge)
 ### What is PageSort
 PageSort is a simple .Net Standard library that is built to ease paging, sort and filtering of Iquerable collections.
 This is the main repository for PageSort and its extensions.

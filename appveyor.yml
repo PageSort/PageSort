@@ -8,10 +8,9 @@ init:
   - cmd: git config --global core.autocrlf true
 before_build:
   - cmd: dotnet --version
-  - cmd: dotnet restore ./src/src.csproj --verbosity m
+  - cmd: dotnet restore C:\projects\pagesort\PageSort\PageSort.csproj --verbosity m
 build_script:
-  # output will be in ./src/bin/debug/netcoreapp1.1/publish
-  - cmd: dotnet publish ./src/src.csproj
+  - cmd: dotnet publish C:\projects\pagesort\PageSort\PageSort.csproj
 after_build:
   # For once the build has completed
 artifacts:

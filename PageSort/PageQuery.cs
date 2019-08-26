@@ -5,6 +5,9 @@ using System.Text;
 
 namespace PageSort
 {
+    /// <summary>
+    /// Properties to be used during paging and sorting of a collection.
+    /// </summary>
     public class PageQuery
     {
 

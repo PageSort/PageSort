@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PageSort", "PageSort\PageSort.csproj", "{392F5582-ABCA-4DDD-B38B-FD27149AD6F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PageSort", "PageSort\PageSort.csproj", "{392F5582-ABCA-4DDD-B38B-FD27149AD6F5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{917EFF6A-84CF-4249-A7DD-074BDE53D775}"
+	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

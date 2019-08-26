@@ -9,10 +9,7 @@ init:
 before_build:
   - cmd: dotnet --version
   - cmd: dotnet restore C:\projects\pagesort\PageSort\PageSort.csproj --verbosity m
-build_script:
-  - cmd: dotnet publish C:\projects\pagesort\PageSort\PageSort.csproj
-after_build:
-  # For once the build has completed
+
 artifacts:
  - path: .\artifacts\**\*.nupkg
    name: NuGet

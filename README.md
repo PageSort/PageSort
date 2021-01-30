@@ -1,8 +1,9 @@
 # PageSort
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/aeeb7078586c1058301a/maintainability)](https://codeclimate.com/github/stanbarn/PageSort/maintainability) [![Build status](https://ci.appveyor.com/api/projects/status/58gyvtqufqq6l8j5/branch/master?svg=true)](https://ci.appveyor.com/project/stanbarn/pagesort/branch/master) ![Nuget](https://img.shields.io/nuget/v/PageSort) ![GitHub](https://img.shields.io/github/license/stanbarn/PageSort)
+[![Maintainability](https://api.codeclimate.com/v1/badges/aeeb7078586c1058301a/maintainability)](https://codeclimate.com/github/stanbarn/PageSort/maintainability) [![Build status](https://ci.appveyor.com/api/projects/status/58gyvtqufqq6l8j5/branch/master?svg=true)](https://ci.appveyor.com/project/stanbarn/pagesort/branch/master)
+
 ### What is PageSort
-PageSort is a simple .Net Standard library that is built to ease paging, sort and filtering of Iquerable collections.
+PageSort is a simple .Net Standard library that is built to ease paging, sort and filtering of IQueryable collections.
 This is the main repository for PageSort and its extensions.
 
 
@@ -16,12 +17,12 @@ Using PageSort;
 
 #### Paging Example
 
-##### Using the IQuarable Extension
+##### Using the IQueryable Extension
 
 collection - collection.Page(1, 20);
 
-Thhe Page Iquarable extension takes the pageNumber and the pageSize.
-It returns page collection of the specified source query.
+The Page IQueryable extension takes the pageNumber and the pageSize.
+It returns paged collection of the specified source query.
 
 ##### Using the GeneratePaging Method.
 
@@ -31,16 +32,16 @@ var pageQuery = new PageQuery{
     PageSize = 20,
 };
 
-var collection = new IQuarable<Student>();
+var collection = new IQueryable<Student>();
 var pagedCollection = GeneratePaging(collection, pageQuery);
 ```
 
-The GeneratePaging() method takes an Iquarable collection and a PageQuery object.
+The GeneratePaging() method takes an IQueryable collection and a PageQuery object.
 This method returns a PageResult object. 
 
 #### Sorting Example
 
-##### Using the IQuarable Extension.
+##### Using the IQueryable Extension.
 
 ```csharp
 var sortedCollection = collection.OrderByProperty(sortProperty);
@@ -50,7 +51,7 @@ var sortedCollection = collection.OrderByDescendingProperty(sortProperty);
 
 #### Page and Sort at ago
 
-You can also using the GeneratePaging Method to perform both paging and sorting Operations on a collection
+You can also use the GeneratePaging Method to perform both paging and sorting Operations on a collection
 
 ```csharp
 var pageQuery = new PageQuery{
@@ -60,7 +61,7 @@ var pageQuery = new PageQuery{
     SortOrder = ListSortDirection.Descending
 };
 
-var collection = new IQuarable<Student>();
+var collection = new IQueryable<Student>();
 var pagedCollection = GeneratePaging(collection, pageQuery);
 ```
 

@@ -44,7 +44,7 @@ namespace PageSort
                 NextPage = NextPage,
                 PageSize = PageSize,
                 PreviousPage = PreviousPage,
-                Collection = collection.Page(CurrentPage, PageSize),
+                Collection = collection.Page(CurrentPage, PageSize).ToList(),
                 TotalCount = TotalCount,
                 TotalPages = TotalPages
             };

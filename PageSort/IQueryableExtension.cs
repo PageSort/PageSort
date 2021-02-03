@@ -26,9 +26,9 @@ namespace PageSort
         /// <param name="pageNumber">Page number</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Ordered collection</returns>
-        public static IList<T> Page<T>(this IQueryable<T> source, int pageNumber, int pageSize)
+        public static IQueryable<T> Page<T>(this IQueryable<T> source, int pageNumber, int pageSize)
         {
-            return source.PageQueryable(pageNumber, pageSize).ToList();
+            return source.PageQueryable(pageNumber, pageSize);
         }
 
         public static IQueryable<T> PageQueryable<T>(this IQueryable<T> source, int pageNumber, int pageSize)

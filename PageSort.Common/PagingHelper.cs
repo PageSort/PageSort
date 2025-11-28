@@ -144,8 +144,6 @@ public static class Page<T>
         };
     }
 
-
-
     public static Task<PagedResult<T>> GeneratePagingAsync(IQueryable<T> collection, PageQuery pageQuery)
     {
         ArgumentNullException.ThrowIfNull(collection);

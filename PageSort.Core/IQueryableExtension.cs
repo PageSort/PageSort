@@ -9,6 +9,9 @@ using System.Text;
 
 namespace PageSort.Core;
 
+/// <summary>
+/// 
+/// </summary>
 public static class IQueryableExtension
 {
     private static readonly MethodInfo OrderByMethod = typeof(Queryable)

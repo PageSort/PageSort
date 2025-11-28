@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace PageSort.Core.Extensions;
 
+/// <summary>
+/// 
+/// </summary>
 public static class DictionaryExtensions
 {
     /// <summary>

@@ -1,7 +1,12 @@
 ﻿namespace PageSort.Core;
 
+/// <summary>
+/// Paged result.
+/// </summary>
+/// <typeparam name="TEntity"></typeparam>
 public class PagedResult<TEntity>
 {
+
     public int CurrentPage { get; set; }
 
     public int PageSize { get; set; }

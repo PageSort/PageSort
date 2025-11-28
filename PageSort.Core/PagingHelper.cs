@@ -29,7 +29,7 @@ namespace PageSort.Core
             ArgumentNullException.ThrowIfNull(collection);
             ArgumentNullException.ThrowIfNull(pageQuery);
 
-            if (!string.IsNullOrEmpty(pageQuery.Fields))
+            if (pageQuery.Fields is null or [])
                 throw new InvalidOperationException("Dynamic field selection requires GeneratePagingDynamic().");
 
             if (pageQuery.SortProperty is not null)
@@ -65,10 +65,10 @@ namespace PageSort.Core
             ArgumentNullException.ThrowIfNull(collection);
             ArgumentNullException.ThrowIfNull(pageQuery);
 
-            if (string.IsNullOrWhiteSpace(pageQuery.Fields))
+            if (pageQuery.Fields is null or [])
                 throw new InvalidOperationException("Fields must be provided for dynamic paging.");
 
-            var fields = pageQuery.Fields.Split(',').Select(f => f.Trim()).ToArray();
+            var fields = pageQuery.Fields.Select(f => f.Trim()).ToArray();
 
             if (!string.IsNullOrEmpty(pageQuery.SortProperty) && !fields.Contains(pageQuery.SortProperty, StringComparer.OrdinalIgnoreCase))
                 throw new InvalidOperationException($"Sort field '{pageQuery.SortProperty}' must be part of the selected fields.");
@@ -111,10 +111,10 @@ namespace PageSort.Core
             ArgumentNullException.ThrowIfNull(collection);
             ArgumentNullException.ThrowIfNull(pageQuery);
 
-            if (string.IsNullOrWhiteSpace(pageQuery.Fields))
+            if (pageQuery.Fields is null or [])
                 throw new InvalidOperationException("Fields must be provided for dynamic paging.");
 
-            var fields = pageQuery.Fields.Split(',').Select(f => f.Trim()).ToArray();
+            var fields = pageQuery.Fields.Select(f => f.Trim()).ToArray();
             var destinationProperties = typeof(TDestination).GetProperties()
                 .Select(p => p.Name)
                 .ToHashSet(StringComparer.OrdinalIgnoreCase);

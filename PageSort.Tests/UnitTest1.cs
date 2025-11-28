@@ -99,7 +99,7 @@ namespace PageSort.Tests
             {
                 PageNumber = 1,
                 PageSize = 10,
-                Fields = "Name,Age"
+                Fields = ["Name", "Age"]
             };
             Assert.Throws<InvalidOperationException>(() =>
             {
@@ -114,7 +114,7 @@ namespace PageSort.Tests
             {
                 PageNumber = 1,
                 PageSize = 10,
-                Fields = "Name,Age",
+                Fields = ["Name", "Age"],
                 SortProperty = "Age",
                 SortDirection = System.ComponentModel.ListSortDirection.Ascending
             };
@@ -137,7 +137,7 @@ namespace PageSort.Tests
             {
                 PageNumber = 1,
                 PageSize = 10,
-                Fields = "Name,Age",
+                Fields = ["Name", "Age"],
                 SortProperty = "Balance",
                 SortDirection = System.ComponentModel.ListSortDirection.Ascending
             };
@@ -171,7 +171,7 @@ namespace PageSort.Tests
             {
                 PageNumber = 1,
                 PageSize = 10,
-                Fields = "Name,Age,Password",
+                Fields = ["Name", "Age", "Password"],
                 SortProperty = "Age",
                 SortDirection = System.ComponentModel.ListSortDirection.Ascending
             };

@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
-namespace PageSort.Core;
+namespace PageSort.Core.Extensions;
 
 /// <summary>
 /// 

@@ -31,7 +31,7 @@ public class PageQuery
     public IDictionary<string, string> Filters { get; } =
         new Dictionary<string, string>();
 
-    public string? Fields { get; set; } = null;
+    public string[]? Fields { get; set; } = null;
 
     public string? SortProperty { get; set; }
 

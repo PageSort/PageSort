@@ -155,6 +155,42 @@ public static class IQueryableExtension
     }
 
 
+    /// <summary>
+    /// Applies dynamic filters to an IQueryable based on a list of Filter objects.
+    /// </summary>
+    public static IQueryable<T> ApplyFilters<T>(this IQueryable<T> query, IEnumerable<Filter> filters)
+    {
+        if (filters == null || !filters.Any()) return query;
+
+        var parameter = Expression.Parameter(typeof(T), "x");
+        
+
+        Expression? predicate = null;
+
+        foreach (var filter in filters)
+        {
+            var member = Expression.Property(parameter, filter.Field);
+
+            Expression condition = filter.Operator switch
+            {
+                "=" => Expression.Equal(member, Expression.Constant(Convert.ChangeType(filter.Value, member.Type))),
+                "!=" => Expression.NotEqual(member, Expression.Constant(Convert.ChangeType(filter.Value, member.Type))),
+                ">" => Expression.GreaterThan(member, Expression.Constant(Convert.ChangeType(filter.Value, member.Type))),
+                ">=" => Expression.GreaterThanOrEqual(member, Expression.Constant(Convert.ChangeType(filter.Value, member.Type))),
+                "<" => Expression.LessThan(member, Expression.Constant(Convert.ChangeType(filter.Value, member.Type))),
+                "<=" => Expression.LessThanOrEqual(member, Expression.Constant(Convert.ChangeType(filter.Value, member.Type))),
+                "Contains" => Expression.Call(member, typeof(string).GetMethod("Contains", [typeof(string)])!, Expression.Constant(filter.Value)),
+                "StartsWith" => Expression.Call(member, typeof(string).GetMethod("StartsWith", [typeof(string)])!, Expression.Constant(filter.Value)),
+                "EndsWith" => Expression.Call(member, typeof(string).GetMethod("EndsWith", [typeof(string)])!, Expression.Constant(filter.Value)),
+                _ => throw new InvalidOperationException($"Operator {filter.Operator} is not supported")
+            };
+
+            predicate = predicate == null ? condition : Expression.AndAlso(predicate, condition);
+        }
+
+        var lambda = Expression.Lambda<Func<T, bool>>(predicate!, parameter);
+        return query.Where(lambda);
+    }
 
 
     private static IQueryable<TSource> GetSortedSource<TSource>(IQueryable<TSource> source, MethodInfo genericMethod, LambdaExpression lambda)
@@ -190,4 +226,5 @@ public static class IQueryableExtension
             throw new UnauthorizedAccessException(
                 $"Access denied to sensitive fields: {string.Join(", ", forbidden)}");
     }
+    
 }

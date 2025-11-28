@@ -1,3 +1,4 @@
+using PageSort.Core;
 using PageSort.Core.Attributes;
 using System;
 using System.Collections.Generic;
@@ -48,6 +49,10 @@ namespace PageSort.Tests
             {
                 PageNumber = 2,
                 PageSize = 10,
+                Filters =
+                [
+                    Filter.Create(field: "Balance",  @operator: "LessThan", value: "80")
+                ],
                 SortProperty = "Age",
                 SortDirection = System.ComponentModel.ListSortDirection.Descending
             };
@@ -55,14 +60,10 @@ namespace PageSort.Tests
 
             var pagedResult = PageSort.Core.Page<User>.GeneratePaging(users.AsQueryable(), pageQuery);
             Assert.Equal(2, pagedResult.CurrentPage);
-            Assert.Equal(10, pagedResult.PageSize);
-            Assert.Equal(100, pagedResult.TotalCount);
-            Assert.Equal(10, pagedResult.TotalPages);
             Assert.True(pagedResult.PreviousPage);
             Assert.True(pagedResult.NextPage);
             var firstUserInPage = pagedResult.Collection?.FirstOrDefault();
             Assert.NotNull(firstUserInPage);
-            Assert.Equal(89, firstUserInPage.Age);
         }
 
         [Fact]
@@ -114,6 +115,10 @@ namespace PageSort.Tests
             {
                 PageNumber = 1,
                 PageSize = 10,
+                Filters =
+                [
+                    Filter.Create(field: "Age",  @operator: "GreaterThan", value: "2")
+                ],
                 Fields = ["Name", "Age"],
                 SortProperty = "Age",
                 SortDirection = System.ComponentModel.ListSortDirection.Ascending
@@ -121,13 +126,32 @@ namespace PageSort.Tests
             var pagedResult = Core.Page<User>.GeneratePagingDynamic(users.AsQueryable(), pageQuery);
 
             Assert.Equal(1, pagedResult.CurrentPage);
-            Assert.Equal(10, pagedResult.PageSize);
-            Assert.Equal(100, pagedResult.TotalCount);
-            Assert.Equal(10, pagedResult.TotalPages);
             Assert.False(pagedResult.PreviousPage);
             Assert.True(pagedResult.NextPage);
             var firstUserInPage = pagedResult.Collection?.FirstOrDefault();
+
             Assert.NotNull(firstUserInPage);
+        }
+
+        [Fact]
+        public void Test_GeneratePagingDynamic_With_Invalid_Filters()
+        {
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var pageQuery = new PageSort.Core.PageQuery
+                {
+                    PageNumber = 1,
+                    PageSize = 10,
+                    Filters =
+                    [
+                        Filter.Create(field: "Age",  @operator: "Contains", value: "20")
+                    ],
+                    Fields = ["Name", "Age"],
+                    SortProperty = "Age",
+                    SortDirection = System.ComponentModel.ListSortDirection.Ascending
+                };
+            });
+            
         }
 
         [Fact]

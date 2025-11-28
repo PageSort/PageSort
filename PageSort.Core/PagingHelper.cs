@@ -29,8 +29,13 @@ namespace PageSort.Core
             ArgumentNullException.ThrowIfNull(collection);
             ArgumentNullException.ThrowIfNull(pageQuery);
 
-            if (pageQuery.Fields is null or [])
+            if (pageQuery.Fields is not null and not [])
                 throw new InvalidOperationException("Dynamic field selection requires GeneratePagingDynamic().");
+
+            if (pageQuery.Filters?.Count > 0)
+            {
+                collection = collection.ApplyFilters(pageQuery.Filters);
+            }
 
             if (pageQuery.SortProperty is not null)
                 collection = collection.OrderByProperty(pageQuery.SortProperty, pageQuery.SortDirection ?? ListSortDirection.Ascending);
@@ -69,6 +74,11 @@ namespace PageSort.Core
                 throw new InvalidOperationException("Fields must be provided for dynamic paging.");
 
             var fields = pageQuery.Fields.Select(f => f.Trim()).ToArray();
+
+            if (pageQuery.Filters?.Count > 0)
+            {
+                collection = collection.ApplyFilters(pageQuery.Filters);
+            }
 
             if (!string.IsNullOrEmpty(pageQuery.SortProperty) && !fields.Contains(pageQuery.SortProperty, StringComparer.OrdinalIgnoreCase))
                 throw new InvalidOperationException($"Sort field '{pageQuery.SortProperty}' must be part of the selected fields.");
@@ -121,6 +131,11 @@ namespace PageSort.Core
 
             if (!destinationProperties.Any(p => fields.Contains(p, StringComparer.OrdinalIgnoreCase)))
                 throw new InvalidOperationException("At least one destination property must be part of the selected fields.");
+
+            if (pageQuery.Filters?.Count > 0)
+            {
+                collection = collection.ApplyFilters(pageQuery.Filters);
+            }
 
             if (!string.IsNullOrEmpty(pageQuery.SortProperty) && !fields.Contains(pageQuery.SortProperty, StringComparer.OrdinalIgnoreCase))
                 throw new InvalidOperationException($"Sort field '{pageQuery.SortProperty}' must be part of the selected fields.");

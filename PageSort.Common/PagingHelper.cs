@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PageSort.Common.Extensions;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -23,6 +24,10 @@ public static class Page<T>
         ArgumentNullException.ThrowIfNull(pageQuery);
         ArgumentNullException.ThrowIfNull(collection);
 
+        if (!string.IsNullOrEmpty(pageQuery.Fields))
+            throw new InvalidOperationException(
+                "Dynamic field selection requires GeneratePagingDynamic().");
+
         int count = collection.Count();
         int CurrentPage = pageQuery.PageNumber;
         int PageSize = pageQuery.PageSize;
@@ -43,6 +48,103 @@ public static class Page<T>
             TotalPages = TotalPages
         };
     }
+
+    public static PagedResult<KeyValuePair<string, object?>> GeneratePagingDynamic<TSource>(IQueryable<TSource> collection, PageQuery pageQuery)
+    {
+        ArgumentNullException.ThrowIfNull(pageQuery);
+        ArgumentNullException.ThrowIfNull(collection);
+
+        if (string.IsNullOrWhiteSpace(pageQuery.Fields))
+            throw new InvalidOperationException(
+                "Fields must be provided when calling GeneratePagingDynamic().");
+
+        var fields = pageQuery.Fields!
+            .Split(',')
+            .Select(f => f.Trim())
+            .ToArray() ?? [];
+
+        if (!string.IsNullOrEmpty(pageQuery.SortProperty) && !fields.Contains(pageQuery.SortProperty, StringComparer.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException(
+                $"Sort field '{pageQuery.SortProperty}' must be part of the selected fields.");
+        }
+
+        var projectedQuery = collection.SelectDynamic(fields);
+
+        int totalCount = collection.Count();
+        int totalPages = (int)Math.Ceiling(totalCount / (double)pageQuery.PageSize);
+
+        var items = projectedQuery
+            .Page(pageQuery.PageNumber, pageQuery.PageSize);
+
+        return new PagedResult<KeyValuePair<string, object?>>
+        {
+            CurrentPage = pageQuery.PageNumber,
+            PageSize = pageQuery.PageSize,
+            TotalCount = totalCount,
+            TotalPages = totalPages,
+            PreviousPage = pageQuery.PageNumber > 1,
+            NextPage = pageQuery.PageNumber < totalPages,
+            Collection = items.ToEnumerable()
+        };
+    }
+
+    public static PagedResult<TDestination> GeneratePagingDynamic<TSource, TDestination>(IQueryable<TSource> collection, PageQuery pageQuery)
+        where TDestination : class, new()
+    {
+        ArgumentNullException.ThrowIfNull(pageQuery);
+        ArgumentNullException.ThrowIfNull(collection);
+
+        if (string.IsNullOrWhiteSpace(pageQuery.Fields))
+            throw new InvalidOperationException(
+                "Fields must be provided when calling GeneratePagingDynamic().");
+
+        var fields = pageQuery.Fields!
+            .Split(',')
+            .Select(f => f.Trim())
+            .ToArray() ?? [];
+
+        var destinationProperties = typeof(TDestination).GetProperties()
+            .Select(p => p.Name)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        if (!destinationProperties.Any(p => fields.Contains(p, StringComparer.OrdinalIgnoreCase)))
+        {
+            throw new InvalidOperationException(
+                "At least one of the destination type properties must be part of the selected fields.");
+        }
+
+        if (!string.IsNullOrEmpty(pageQuery.SortProperty) && !fields.Contains(pageQuery.SortProperty, StringComparer.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException(
+                $"Sort field '{pageQuery.SortProperty}' must be part of the selected fields.");
+        }
+
+        if (pageQuery.SortProperty is not null)
+            collection = collection.OrderByProperty(pageQuery.SortProperty, pageQuery.SortDirection ?? ListSortDirection.Ascending);
+
+
+        var projectedQuery = collection.SelectDynamic(fields);
+
+        int totalCount = collection.Count();
+        int totalPages = (int)Math.Ceiling(totalCount / (double)pageQuery.PageSize);
+
+        var items = projectedQuery
+            .Page(pageQuery.PageNumber, pageQuery.PageSize);
+
+        return new PagedResult<TDestination>
+        {
+            CurrentPage = pageQuery.PageNumber,
+            PageSize = pageQuery.PageSize,
+            TotalCount = totalCount,
+            TotalPages = totalPages,
+            PreviousPage = pageQuery.PageNumber > 1,
+            NextPage = pageQuery.PageNumber < totalPages,
+            Collection = items.MapTo<TDestination>()
+        };
+    }
+
+
 
     public static Task<PagedResult<T>> GeneratePagingAsync(IQueryable<T> collection, PageQuery pageQuery)
     {

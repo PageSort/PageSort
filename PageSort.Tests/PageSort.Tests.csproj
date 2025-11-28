@@ -14,7 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\PageSort.Common\PageSort.Common.csproj" />
+		<ProjectReference Include="..\PageSort.Core\PageSort.Core.csproj" />
 		<ProjectReference Include="..\PageSort\PageSort.csproj" />
 	</ItemGroup>
 

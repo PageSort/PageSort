@@ -112,7 +112,7 @@ public static class IQueryableExtension
     /// </example>
     public static IQueryable<Dictionary<string, object>> SelectDynamic<TSource>(this IQueryable<TSource> source, string[] fields)
     {
-        ValidateFieldsAreAllowed<TSource>(fields);
+        fields = ValidateFieldsAreAllowed<TSource>(fields);
 
         var invalid = fields.Where(f =>
             typeof(TSource).GetProperty(f,
@@ -210,7 +210,7 @@ public static class IQueryableExtension
         return orderByProperty;
     }
 
-    private static void ValidateFieldsAreAllowed<T>(IEnumerable<string> requestedFields)
+    private static string[] ValidateFieldsAreAllowed<T>(IEnumerable<string> requestedFields)
     {
         var sensitiveFields = typeof(T)
             .GetProperties()
@@ -218,13 +218,19 @@ public static class IQueryableExtension
             .Select(p => p.Name)
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-        var forbidden = requestedFields
-            .Where(f => sensitiveFields.Contains(f))
+        //var forbidden = requestedFields
+        //    .Where(f => sensitiveFields.Contains(f))
+        //    .ToList();
+
+        //if (forbidden.Count != 0)
+        //    throw new UnauthorizedAccessException(
+        //        $"Access denied to sensitive fields: {string.Join(", ", forbidden)}");
+
+        var allowedFields = requestedFields
+            .Where(f => !sensitiveFields.Contains(f))
             .ToList();
 
-        if (forbidden.Count != 0)
-            throw new UnauthorizedAccessException(
-                $"Access denied to sensitive fields: {string.Join(", ", forbidden)}");
+        return [.. allowedFields];
     }
     
 }

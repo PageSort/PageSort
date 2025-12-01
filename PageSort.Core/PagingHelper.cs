@@ -17,13 +17,11 @@ namespace PageSort.Core
 
         /// <summary>
         /// Pages and sorts a collection based on the provided <see cref="PageQuery"/>. 
-        /// Throws an exception if <see cref="PageQuery.Fields"/> is provided (use dynamic paging instead).
         /// </summary>
         /// <param name="collection">The collection to page.</param>
         /// <param name="pageQuery">The paging and sorting parameters.</param>
         /// <returns>A <see cref="PagedResult{T}"/> containing the paged collection.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="collection"/> or <paramref name="pageQuery"/> is null.</exception>
-        /// <exception cref="InvalidOperationException">Thrown if dynamic fields are requested.</exception>
         public static PagedResult<T> GeneratePaging(IQueryable<T> collection, PageQuery pageQuery)
         {
             ArgumentNullException.ThrowIfNull(collection);

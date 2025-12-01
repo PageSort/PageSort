@@ -27,23 +27,14 @@ namespace PageSort
             int TotalPages = (int)Math.Ceiling(count / (double)PageSize);
 
             if (!string.IsNullOrEmpty(pageQuery.SortProperty))
-            {
-                if (pageQuery.SortDirection == ListSortDirection.Descending)
-                    collection = collection.OrderByDescendingProperty(pageQuery.SortProperty);
-
-                else
-                    collection = collection.OrderByProperty(pageQuery.SortProperty);
-            }
-            
-            var PreviousPage = CurrentPage > 1 ? true : false;
-            var NextPage = CurrentPage < TotalPages ? true : false;
+                collection = collection.OrderByProperty(pageQuery.SortProperty, pageQuery.SortDirection);
 
             return new PagedResult<T>
             {
                 CurrentPage = CurrentPage,
-                NextPage = NextPage,
+                NextPage = CurrentPage < TotalPages ? true : false,
                 PageSize = PageSize,
-                PreviousPage = PreviousPage,
+                PreviousPage = CurrentPage > 1 ? true : false,
                 Collection = collection.Page(CurrentPage, PageSize).ToList(),
                 TotalCount = TotalCount,
                 TotalPages = TotalPages

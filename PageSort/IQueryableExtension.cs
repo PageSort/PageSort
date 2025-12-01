@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -28,46 +29,32 @@ namespace PageSort
         /// <returns>Ordered collection</returns>
         public static IQueryable<T> Page<T>(this IQueryable<T> source, int pageNumber, int pageSize)
         {
-            return source.PageQueryable(pageNumber, pageSize);
-        }
-
-        public static IQueryable<T> PageQueryable<T>(this IQueryable<T> source, int pageNumber, int pageSize)
-        {
             return source.Skip((pageNumber - 1) * pageSize)
                          .Take(pageSize);
         }
 
         /// <summary>
-        /// Returns source ordered by the specified property.
+        /// Returns source ordered by the specified property and sort Direction.
         /// </summary>
         /// <param name="source">Source query</param>
         /// <param name="propertyName">Property name</param>
+        /// <param name="sortDirection">Sort Direction</param>
         /// <returns>Ordered collection</returns>
         public static IQueryable<TSource> OrderByProperty<TSource>
-            (this IQueryable<TSource> source, string propertyName)
+            (this IQueryable<TSource> source, string propertyName, ListSortDirection? sortDirection = ListSortDirection.Ascending)
         {
-            LambdaExpression lambda;
-            var orderByProperty = GetOrderByExpression<TSource>(propertyName, out lambda);
-            MethodInfo genericMethod = OrderByMethod.MakeGenericMethod(
-                typeof(TSource), orderByProperty.Type);
-            return GetSortedSource(source, genericMethod, lambda);
+            var orderByProperty = GetOrderByExpression<TSource>(propertyName, out LambdaExpression lambda);
+
+            if (sortDirection == ListSortDirection.Descending)
+                return GetSortedSource(source, OrderByDescendingMethod.MakeGenericMethod(
+                typeof(TSource), orderByProperty.Type), lambda);
+
+            else
+                return GetSortedSource(source, OrderByMethod.MakeGenericMethod(
+                typeof(TSource), orderByProperty.Type), lambda);
+
         }
 
-        /// <summary>
-        /// Returns source ordered by specified property name in descending order.
-        /// </summary>
-        /// <param name="source">Source query</param>
-        /// <param name="propertyName">Property name</param>
-        /// <returns></returns>
-        public static IQueryable<TSource> OrderByDescendingProperty<TSource>
-            (this IQueryable<TSource> source, string propertyName)
-        {
-            LambdaExpression lambda;
-            var orderByProperty = GetOrderByExpression<TSource>(propertyName, out lambda);
-            MethodInfo genericMethod = OrderByDescendingMethod.MakeGenericMethod(
-                typeof(TSource), orderByProperty.Type);
-            return GetSortedSource(source, genericMethod, lambda);
-        }
 
         private static IQueryable<TSource> GetSortedSource<TSource>(IQueryable<TSource> source, MethodInfo genericMethod, LambdaExpression lambda)
         {

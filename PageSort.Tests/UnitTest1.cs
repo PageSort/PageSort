@@ -49,10 +49,6 @@ namespace PageSort.Tests
             {
                 PageNumber = 2,
                 PageSize = 10,
-                Filters =
-                [
-                    Filter.Create(field: "Balance",  @operator: "LessThan", value: "80")
-                ],
                 SortProperty = "Age",
                 SortDirection = System.ComponentModel.ListSortDirection.Descending
             };
@@ -96,7 +92,7 @@ namespace PageSort.Tests
         [Fact]
         public void Test_Original_GeneratePaging_With_Fields()
         {
-            var pageQuery = new PageSort.Core.PageQuery
+            var pageQuery = new PageSort.Core.AdvancedPageQuery
             {
                 PageNumber = 1,
                 PageSize = 10,
@@ -111,7 +107,7 @@ namespace PageSort.Tests
         [Fact]
         public void Test_GeneratePagingDynamic_With_Valid_Data()
         {
-            var pageQuery = new PageSort.Core.PageQuery
+            var pageQuery = new PageSort.Core.AdvancedPageQuery
             {
                 PageNumber = 1,
                 PageSize = 10,
@@ -123,7 +119,7 @@ namespace PageSort.Tests
                 SortProperty = "Age",
                 SortDirection = System.ComponentModel.ListSortDirection.Ascending
             };
-            var pagedResult = Core.Page<User>.GeneratePagingDynamic(users.AsQueryable(), pageQuery);
+            var pagedResult = Core.Page<User>.GeneratePaging(users.AsQueryable(), pageQuery);
 
             Assert.Equal(1, pagedResult.CurrentPage);
             Assert.False(pagedResult.PreviousPage);
@@ -138,7 +134,7 @@ namespace PageSort.Tests
         {
             Assert.Throws<InvalidOperationException>(() =>
             {
-                var pageQuery = new PageSort.Core.PageQuery
+                var pageQuery = new PageSort.Core.AdvancedPageQuery
                 {
                     PageNumber = 1,
                     PageSize = 10,
@@ -157,7 +153,7 @@ namespace PageSort.Tests
         [Fact]
         public void Test_GeneratePagingDynamic_With_Wrong_SortProerty()
         {
-            var pageQuery = new PageSort.Core.PageQuery
+            var pageQuery = new PageSort.Core.AdvancedPageQuery
             {
                 PageNumber = 1,
                 PageSize = 10,
@@ -168,14 +164,14 @@ namespace PageSort.Tests
 
             Assert.Throws<InvalidOperationException>(() =>
             {
-                var pagedResult = PageSort.Core.Page<User>.GeneratePagingDynamic(users.AsQueryable(), pageQuery);
+                var pagedResult = PageSort.Core.Page<User>.GeneratePaging(users.AsQueryable(), pageQuery);
             });
         }
 
         [Fact]
         public void Test_GeneratePagingDynamic_With_Missing_Fields()
         {
-            var pageQuery = new PageSort.Core.PageQuery
+            var pageQuery = new PageSort.Core.AdvancedPageQuery
             {
                 PageNumber = 1,
                 PageSize = 10,
@@ -184,14 +180,14 @@ namespace PageSort.Tests
             };
             Assert.Throws<InvalidOperationException>(() =>
             {
-                var pagedResult = PageSort.Core.Page<User>.GeneratePagingDynamic(users.AsQueryable(), pageQuery);
+                var pagedResult = PageSort.Core.Page<User>.GeneratePaging(users.AsQueryable(), pageQuery);
             });
         }
 
         [Fact]
         public void Test_GeneratePagingDynamic_With_Sensitive_Field()
         {
-            var pageQuery = new PageSort.Core.PageQuery
+            var pageQuery = new PageSort.Core.AdvancedPageQuery
             {
                 PageNumber = 1,
                 PageSize = 10,
@@ -201,7 +197,7 @@ namespace PageSort.Tests
             };
             Assert.Throws<UnauthorizedAccessException>(() =>
             {
-                var pagedResult = PageSort.Core.Page<User>.GeneratePagingDynamic(users.AsQueryable(), pageQuery);
+                var pagedResult = PageSort.Core.Page<User>.GeneratePaging(users.AsQueryable(), pageQuery);
             });
         }
     }

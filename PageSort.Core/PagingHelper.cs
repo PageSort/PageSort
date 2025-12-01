@@ -29,14 +29,6 @@ namespace PageSort.Core
             ArgumentNullException.ThrowIfNull(collection);
             ArgumentNullException.ThrowIfNull(pageQuery);
 
-            if (pageQuery.Fields is not null and not [])
-                throw new InvalidOperationException("Dynamic field selection requires GeneratePagingDynamic().");
-
-            if (pageQuery.Filters?.Count > 0)
-            {
-                collection = collection.ApplyFilters(pageQuery.Filters);
-            }
-
             if (pageQuery.SortProperty is not null)
                 collection = collection.OrderByProperty(pageQuery.SortProperty, pageQuery.SortDirection ?? ListSortDirection.Ascending);
 
@@ -65,7 +57,7 @@ namespace PageSort.Core
         /// <returns>A <see cref="PagedResult{KeyValuePair}"/> containing the paged dictionary items.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="collection"/> or <paramref name="pageQuery"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Thrown if no fields are provided or sort field is missing in selection.</exception>
-        public static PagedResult<KeyValuePair<string, object?>> GeneratePagingDynamic<TSource>(IQueryable<TSource> collection, PageQuery pageQuery)
+        public static PagedResult<KeyValuePair<string, object?>> GeneratePaging<TSource>(IQueryable<TSource> collection, AdvancedPageQuery pageQuery)
         {
             ArgumentNullException.ThrowIfNull(collection);
             ArgumentNullException.ThrowIfNull(pageQuery);
@@ -115,7 +107,7 @@ namespace PageSort.Core
         /// <returns>A <see cref="PagedResult{TDestination}"/> containing the paged mapped items.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="collection"/> or <paramref name="pageQuery"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Thrown if no fields are provided or none match the destination type properties.</exception>
-        public static PagedResult<TDestination> GeneratePagingDynamic<TSource, TDestination>(IQueryable<TSource> collection, PageQuery pageQuery)
+        public static PagedResult<TDestination> GeneratePaging<TSource, TDestination>(IQueryable<TSource> collection, AdvancedPageQuery pageQuery)
             where TDestination : class, new()
         {
             ArgumentNullException.ThrowIfNull(collection);
@@ -175,15 +167,15 @@ namespace PageSort.Core
         /// <summary>
         /// Async version of <see cref="GeneratePagingDynamic{TSource}(IQueryable{TSource}, PageQuery)"/>.
         /// </summary>
-        public static Task<PagedResult<KeyValuePair<string, object?>>> GeneratePagingDynamicAsync<TSource>(IQueryable<TSource> collection, PageQuery pageQuery)
-            => Task.FromResult(GeneratePagingDynamic(collection, pageQuery));
+        public static Task<PagedResult<KeyValuePair<string, object?>>> GeneratePagingAsync<TSource>(IQueryable<TSource> collection, AdvancedPageQuery pageQuery)
+            => Task.FromResult(GeneratePaging(collection, pageQuery));
 
         /// <summary>
         /// Async version of <see cref="GeneratePagingDynamic{TSource, TDestination}(IQueryable{TSource}, PageQuery)"/>.
         /// </summary>
-        public static Task<PagedResult<TDestination>> GeneratePagingDynamicAsync<TSource, TDestination>(IQueryable<TSource> collection, PageQuery pageQuery)
+        public static Task<PagedResult<TDestination>> GeneratePagingAsync<TSource, TDestination>(IQueryable<TSource> collection, AdvancedPageQuery pageQuery)
             where TDestination : class, new()
-            => Task.FromResult(GeneratePagingDynamic<TSource, TDestination>(collection, pageQuery));
+            => Task.FromResult(GeneratePaging<TSource, TDestination>(collection, pageQuery));
 
         #endregion
     }

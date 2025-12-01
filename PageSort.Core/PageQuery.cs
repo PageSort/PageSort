@@ -29,15 +29,19 @@ public class PageQuery
 
     public int PageSize { get; set; }
 
-    public List<Filter> Filters { get; set; } = [];
-
-    public string[]? Fields { get; set; } = null;
-
     public string? SortProperty { get; set; }
 
     public ListSortDirection? SortDirection { get; set; } = ListSortDirection.Ascending;
 }
 
+
+public sealed class AdvancedPageQuery : PageQuery
+{
+    public List<Filter> Filters { get; set; } = [];
+
+    public string[]? Fields { get; set; } = null;
+
+}
 
 /// <summary>
 /// Represents a single filter condition.

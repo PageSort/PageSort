@@ -24,11 +24,11 @@ namespace PageSort.Tests
         public string Name { get; set; }
     }
 
-    public class UnitTest1
+    public class PageQueryTests
     {
         readonly List<User> users = new();
 
-        public UnitTest1()
+        public PageQueryTests()
         {
             for (int i = 0; i < 100; i++)
             {

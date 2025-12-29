@@ -154,6 +154,58 @@ public static class IQueryableExtension
         return source.Select(selector);
     }
 
+    public static IQueryable<TDestination> ProjectToDestination<TSource, TDestination>(this IQueryable<TSource> source, string[] fields)
+    where TDestination : class, new()
+    {
+        var sourceProps = typeof(TSource).GetProperties()
+            .ToDictionary(p => p.Name, StringComparer.OrdinalIgnoreCase);
+
+        var destProps = typeof(TDestination).GetProperties()
+            .Where(p => p.CanWrite && p.GetSetMethod() != null)
+            .ToDictionary(p => p.Name, StringComparer.OrdinalIgnoreCase);
+
+        // Build: x => new TDestination { Prop1 = x.Prop1, ... }
+        var parameter = Expression.Parameter(typeof(TSource), "x");
+        var bindings = new List<MemberBinding>();
+
+        foreach (var field in fields)
+        {
+            if (sourceProps.TryGetValue(field, out var sourceProp) &&
+                destProps.TryGetValue(field, out var destProp))
+            {
+                var propertyAccess = Expression.Property(parameter, sourceProp);
+                Expression bindExpression = propertyAccess;
+
+                // Handle type conversion if needed
+                if (sourceProp.PropertyType != destProp.PropertyType)
+                {
+                    var sourceType = Nullable.GetUnderlyingType(sourceProp.PropertyType) ?? sourceProp.PropertyType;
+                    var destType = Nullable.GetUnderlyingType(destProp.PropertyType) ?? destProp.PropertyType;
+
+                    if (sourceType == destType || destType.IsAssignableFrom(sourceType))
+                    {
+                        bindExpression = Expression.Convert(propertyAccess, destProp.PropertyType);
+                    }
+                }
+
+                bindings.Add(Expression.Bind(destProp, bindExpression));
+            }
+        }
+
+        if (bindings.Count == 0)
+        {
+            throw new InvalidOperationException("No valid property mappings found");
+        }
+
+        var memberInit = Expression.MemberInit(
+            Expression.New(typeof(TDestination)),
+            bindings
+        );
+
+        var lambda = Expression.Lambda<Func<TSource, TDestination>>(memberInit, parameter);
+
+        return source.Select(lambda);
+    }
 
     /// <summary>
     /// Applies dynamic filters to an IQueryable based on a list of Filter objects.

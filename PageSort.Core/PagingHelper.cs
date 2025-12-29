@@ -1,6 +1,7 @@
 ﻿using PageSort.Core.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -63,12 +64,17 @@ namespace PageSort.Core
             ArgumentNullException.ThrowIfNull(pageQuery);
 
             if (pageQuery.Fields is null or [])
-                throw new InvalidOperationException("Fields must be provided for dynamic paging.");
+            {
+                pageQuery.Fields = [.. typeof(TSource).GetProperties().Select(p => p.Name)];
+            }
 
-            var fields = pageQuery.Fields.Select(f => f.Trim()).ToArray();
+            var fields = pageQuery.Fields
+                .Select(f => f.Trim())
+                .ToImmutableHashSet(StringComparer.OrdinalIgnoreCase);
+
             var destinationProperties = typeof(TDestination).GetProperties()
                 .Select(p => p.Name)
-                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+                .ToImmutableHashSet(StringComparer.OrdinalIgnoreCase);
 
             if (!destinationProperties.Any(p => fields.Contains(p, StringComparer.OrdinalIgnoreCase)))
                 throw new InvalidOperationException("At least one destination property must be part of the selected fields.");
@@ -81,14 +87,10 @@ namespace PageSort.Core
             if (!string.IsNullOrEmpty(pageQuery.SortProperty) && !fields.Contains(pageQuery.SortProperty, StringComparer.OrdinalIgnoreCase))
                 throw new InvalidOperationException($"Sort field '{pageQuery.SortProperty}' must be part of the selected fields.");
 
-            var tSourceFields = typeof(TSource).GetProperties();
-            if (pageQuery.SortProperty is not null && tSourceFields.Any(f => f.Name.Equals(pageQuery.SortProperty, StringComparison.OrdinalIgnoreCase)))
-                collection = collection.OrderByProperty(pageQuery.SortProperty, pageQuery.SortDirection ?? ListSortDirection.Ascending);
-
             int totalCount = collection.Count();
             int totalPages = (int)Math.Ceiling(totalCount / (double)pageQuery.PageSize);
 
-            IQueryable<TDestination> projected = collection.ProjectToDestination<TSource, TDestination>(fields);
+            IQueryable<TDestination> projected = collection.ProjectToDestination<TSource, TDestination>([.. fields]);
 
             IQueryable<TDestination> pagedCollection = projected.Page(pageQuery.PageNumber, pageQuery.PageSize);
 

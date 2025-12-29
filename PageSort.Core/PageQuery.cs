@@ -64,17 +64,9 @@ public sealed class Filter
     /// </summary>
     public object Value { get; } = null!;
 
-    private Filter(string field, string @operator, object value)
+    private Filter(string field, OperatorType @operator, object value)
     {
-
-        if (!Enum.TryParse<OperatorType>(@operator, out var op))
-        {
-            throw new ArgumentException($"Invalid operator type: {value}");
-        }
-
-        ValidateOperator(value, op);
-
-        Operator = op switch
+        Operator = @operator switch
         {
             OperatorType.Equals => "=",
             OperatorType.NotEquals => "!=",
@@ -85,13 +77,13 @@ public sealed class Filter
             OperatorType.Contains => "Contains",
             OperatorType.StartsWith => "StartsWith",
             OperatorType.EndsWith => "EndsWith",
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(nameof(@operator), @operator, null)
         };
         Field = field;
         Value = value;
     }
 
-    public static Filter Create(string field, string @operator, object value)
+    public static Filter Create(string field, OperatorType @operator, object value)
     {
         return new Filter(field, @operator, value);
     }

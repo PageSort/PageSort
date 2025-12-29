@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PageSort.Core.Enums;
 
-internal enum OperatorType
+public enum OperatorType
 {
     Equals,
     NotEquals,

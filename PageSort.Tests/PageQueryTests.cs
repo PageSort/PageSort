@@ -1,5 +1,6 @@
 using PageSort.Core;
 using PageSort.Core.Attributes;
+using PageSort.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,23 @@ namespace PageSort.Tests
 
         [MarkAsSensitive]
         public string Password { get; set; }
+
+        public string Age90Daysago
+        {
+            get
+            {
+                return $"{Age - 90}";
+            }
+        }
+    }
+
+    public class UserDTO
+    {
+        public int Age { get; set; }
+        public string Name { get; set; }
+
+        public string Age90Daysago { get; set; } = string.Empty;
+
     }
 
     public class FilteredUser
@@ -113,7 +131,7 @@ namespace PageSort.Tests
                 PageSize = 10,
                 Filters =
                 [
-                    Filter.Create(field: "Age",  @operator: "GreaterThan", value: "2")
+                    Filter.Create(field: "Age",  @operator: OperatorType.GreaterThan, value: "2")
                 ],
                 Fields = ["Name", "Age"],
                 SortProperty = "Age",
@@ -140,14 +158,14 @@ namespace PageSort.Tests
                     PageSize = 10,
                     Filters =
                     [
-                        Filter.Create(field: "Age",  @operator: "Contains", value: "20")
+                        Filter.Create(field: "Age",  @operator: OperatorType.Contains, value: "20")
                     ],
                     Fields = ["Name", "Age"],
                     SortProperty = "Age",
                     SortDirection = System.ComponentModel.ListSortDirection.Ascending
                 };
             });
-            
+
         }
 
         [Fact]
@@ -199,6 +217,29 @@ namespace PageSort.Tests
             {
                 var pagedResult = PageSort.Core.Page<User>.GeneratePaging(users.AsQueryable(), pageQuery);
             });
+        }
+
+
+        [Fact]
+        public void Test_GeneratePagingDynamic_Correct_Field()
+        {
+            var pageQuery = new PageSort.Core.AdvancedPageQuery
+            {
+                PageNumber = 1,
+                PageSize = 10,
+                Filters =
+                [
+                    Filter.Create(field: "Age",  @operator: OperatorType.LessThan, value: "10")
+                ],
+                Fields = ["Name", "Age"],
+                SortProperty = "Age",
+                SortDirection = System.ComponentModel.ListSortDirection.Ascending
+            };
+
+            var pagedResult = PageSort.Core.Page<User>.GeneratePaging<User, UserDTO>(users.AsQueryable(), pageQuery);
+
+            Assert.Equal(1, pagedResult.CurrentPage);
+
         }
     }
 }

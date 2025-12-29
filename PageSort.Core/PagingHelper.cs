@@ -81,7 +81,8 @@ namespace PageSort.Core
             if (!string.IsNullOrEmpty(pageQuery.SortProperty) && !fields.Contains(pageQuery.SortProperty, StringComparer.OrdinalIgnoreCase))
                 throw new InvalidOperationException($"Sort field '{pageQuery.SortProperty}' must be part of the selected fields.");
 
-            if (pageQuery.SortProperty is not null)
+            var tSourceFields = typeof(TSource).GetProperties();
+            if (pageQuery.SortProperty is not null && tSourceFields.Any(f => f.Name.Equals(pageQuery.SortProperty, StringComparison.OrdinalIgnoreCase)))
                 collection = collection.OrderByProperty(pageQuery.SortProperty, pageQuery.SortDirection ?? ListSortDirection.Ascending);
 
             int totalCount = collection.Count();
